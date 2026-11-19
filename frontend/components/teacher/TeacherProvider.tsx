@@ -5,6 +5,7 @@ type TeacherContextType = {
   department: string | null;
   year: string | null;
   section: string | null;
+  email: string | null;
   isGuest: boolean;
   isAdmin: boolean;
   assignedDepartment: string | null;
@@ -20,6 +21,7 @@ export function TeacherProvider({ children }: { children: ReactNode }) {
   const [department, setDepartmentState] = useState<string | null>(null);
   const [year, setYearState] = useState<string | null>(null);
   const [section, setSectionState] = useState<string | null>(null);
+  const [email, setEmailState] = useState<string | null>(null);
   const [isGuest, setIsGuest] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [assignedDepartment, setAssignedDepartment] = useState<string | null>(null);
@@ -33,6 +35,9 @@ export function TeacherProvider({ children }: { children: ReactNode }) {
       if (authStr) {
         try {
           const auth = JSON.parse(authStr);
+          if (auth.email) {
+            setEmailState(auth.email);
+          }
           if (auth.department) {
             facultyDept = auth.department.toLowerCase();
             setAssignedDepartment(facultyDept);
@@ -89,6 +94,7 @@ export function TeacherProvider({ children }: { children: ReactNode }) {
     setDepartmentState(null);
     setYearState(null);
     setSectionState(null);
+    setEmailState(null);
     setIsGuest(false);
     setAssignedDepartment(null);
     localStorage.removeItem("veritas_teacher_dept");
@@ -103,6 +109,7 @@ export function TeacherProvider({ children }: { children: ReactNode }) {
         department,
         year,
         section,
+        email,
         isGuest,
         isAdmin,
         assignedDepartment,

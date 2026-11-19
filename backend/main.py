@@ -74,10 +74,14 @@ whisper_model = None
 def load_whisper():
     global whisper_model
     if whisper_model is None:
-        from faster_whisper import WhisperModel
-        print(f"Loading Whisper model: {WHISPER_MODEL_NAME}...")
-        whisper_model = WhisperModel(WHISPER_MODEL_NAME, device="cpu", compute_type="int8")
-        print("[OK] Whisper loaded")
+        try:
+            from faster_whisper import WhisperModel
+            print(f"Loading Whisper model: {WHISPER_MODEL_NAME}...")
+            whisper_model = WhisperModel(WHISPER_MODEL_NAME, device="cpu", compute_type="int8")
+            print("[OK] Whisper loaded")
+        except Exception as e:
+            print(f"[WARN] faster-whisper not available ({e}). Audio transcription will degrade gracefully.")
+            whisper_model = None
     return whisper_model
 
 
@@ -388,6 +392,7 @@ async def session_start(body: SessionStart):
 
 
 @app.post("/api/session/finalize")
+@app.post("/api/session/end")
 async def session_finalize(body: FinalizeBody):
     await db.finalize_session(body.session_id, time.time())
     return {"ok": True}
@@ -1051,16 +1056,6 @@ async def health():
     }
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "main:app",
-        host=os.getenv("HOST", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8000")),
-        reload=True,
-    )
-
-
 # ---------- Faculty Management & Queries ----------
 class FacultySignupPayload(BaseModel):
     email: str
@@ -1316,3 +1311,9 @@ async def update_faculty_passcode(payload: UpdatePasscodePayload):
         return {"ok": True, "message": "Passcode updated successfully."}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+

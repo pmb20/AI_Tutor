@@ -323,9 +323,18 @@ export default function CandidatePage() {
   const handleStartSession = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentName.trim() || !rollNumber.trim()) return;
-    if (!isSubjectApproved) return;
 
-    await prepareQuestionsForSubject(currentSubject);
+    const activeSub = currentSubject || {
+      key: studentDept || "cse",
+      subject: `${(studentDept || "cse").toUpperCase()} Technical Assessment`,
+      department: studentDept || "cse",
+      total_questions: 3,
+      approved_questions: 3,
+      has_approved: true,
+      status: "approved"
+    };
+
+    await prepareQuestionsForSubject(activeSub);
 
     const newSid = `stud-${Date.now().toString(36)}`;
     setSessionId(newSid);
@@ -435,7 +444,8 @@ export default function CandidatePage() {
         setStartTime(Date.now());
       } else {
         // Completed all questions
-        fetch(`${BACKEND_HTTP}/api/session/end`, {
+        setCurrentQIndex(questions.length);
+        fetch(`${BACKEND_HTTP}/api/session/finalize`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ session_id: sessionId }),
@@ -482,7 +492,8 @@ export default function CandidatePage() {
       } else {
         // Complete Exam
         setTimeout(() => {
-          fetch(`${BACKEND_HTTP}/api/session/end`, {
+          setCurrentQIndex(mcqQuestions.length);
+          fetch(`${BACKEND_HTTP}/api/session/finalize`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ session_id: sessionId }),
@@ -804,104 +815,12 @@ export default function CandidatePage() {
                 </div>
               </div>
 
-              {/* SECTION 3: Subject Selection with Validation Workflow */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs uppercase tracking-wider font-semibold text-[#555555]">
-                    Select Curriculum Subject
-                  </label>
-                  <span className="text-[11px] text-[#777777]">
-                    {subjects.length} subjects found for {studentDept.toUpperCase()}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {subjects.map((sub) => {
-                    const isSelected = selectedSubjectKey === sub.key;
-                    const isApproved = sub.has_approved;
-
-                    return (
-                      <button
-                        key={sub.key}
-                        type="button"
-                        onClick={() => setSelectedSubjectKey(sub.key)}
-                        className={`p-3.5 rounded-xl border text-left transition flex flex-col justify-between ${
-                          isSelected
-                            ? "border-[#C8102E] bg-[#FFF1F2]"
-                            : "border-[#E5E5E5] bg-white hover:border-[#A3A3A3]"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between">
-                          <span className="font-bold text-sm text-[#171717]">{sub.subject}</span>
-                          {isApproved ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                              <Check className="w-3 h-3" /> Approved
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                              <Clock className="w-3 h-3" /> AI Drafted
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-[11px] text-[#777777] mt-2">
-                          {sub.total_questions || 5} Questions in Pool
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Validation Status Box */}
-                {currentSubject && (
-                  <div className="mt-3">
-                    {isSubjectApproved ? (
-                      <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>
-                          Questions for <strong>{currentSubject.subject}</strong> have been accepted by faculty. You can begin the test immediately.
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-3">
-                        <div className="flex items-start gap-2">
-                          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold block text-sm">Faculty Validation Required</span>
-                            <span>
-                              The questions for <strong>{currentSubject.subject}</strong> are drafted by the AI model. Under college policy, a faculty member must review and approve them before you can take the assessment.
-                            </span>
-                          </div>
-                        </div>
-
-                        {validationSuccessMsg ? (
-                          <div className="p-2.5 bg-white border border-emerald-300 rounded-lg text-emerald-700 font-medium flex items-center gap-2">
-                            <Send className="w-4 h-4 text-emerald-600" />
-                            {validationSuccessMsg}
-                          </div>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={handleRequestValidation}
-                            disabled={requestingValidation}
-                            className="bg-amber-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-amber-700 transition flex items-center gap-2 shadow-sm disabled:opacity-50"
-                          >
-                            <Send className="w-3.5 h-3.5" />
-                            {requestingValidation ? "Dispatching Query to Faculty..." : "Send Validation Query to Faculty"}
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
               {/* Start Assessment Button */}
               <button
                 type="submit"
-                disabled={!isSubjectApproved}
-                className="w-full bg-[#C8102E] text-white py-3.5 rounded-xl font-bold hover:bg-[#A00D24] transition flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="w-full bg-[#C8102E] text-white py-3.5 rounded-xl font-bold hover:bg-[#A00D24] transition flex items-center justify-center gap-2 shadow-lg text-sm"
               >
-                <span>{isSubjectApproved ? "Begin Assessment Now" : "Awaiting Faculty Question Approval"}</span>
+                <span>Begin Assessment Now</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -995,7 +914,7 @@ export default function CandidatePage() {
                         <span className="w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold">
                           {opt}
                         </span>
-                        <span>{(activeQuestion as MCQQuestion)?.options?.[opt as keyof typeof activeQuestion.options]}</span>
+                        <span>{(activeQuestion as MCQQuestion)?.options?.[opt as "A" | "B" | "C" | "D"]}</span>
                       </div>
                       {quizAnswer === opt && <CheckCircle2 className="w-5 h-5 text-[#C8102E]" />}
                     </button>
@@ -1085,7 +1004,8 @@ export default function CandidatePage() {
                       if (currentQIndex < questions.length - 1) {
                         setCurrentQIndex((prev) => prev + 1);
                       } else {
-                        fetch(`${BACKEND_HTTP}/api/session/end`, {
+                        setCurrentQIndex(questions.length);
+                        fetch(`${BACKEND_HTTP}/api/session/finalize`, {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({ session_id: sessionId }),

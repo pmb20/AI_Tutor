@@ -537,5 +537,145 @@
     "page": 43,
     "text": "\uf0d8representational harm-which is a harm caused by a system demeaning or even ignoring some social groups. \uf0d8debiasing may reduce bias in embeddings and don\u2019t eliminate.",
     "word_count": 25
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p1_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 1,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 1 Hive: HiveQL- Data Types, Operators and Functions, Tables-Managed Tables and External Tables, Partitions and Buckets, Storage Formats, Importing Data, Altering Tables, Dropping Tables, Querying Data - Sorting and Aggregating, MapReduce Scrip ts, Joins, Sub queries, Views User-Defined Functions, Partitioning -static and dynamic Sqoop: Sqoop Connectors, import, generated code, working with Imported Data, Exports Hive Apache Hive is a data warehouse framework built on top of Hadoop that allows users to query, manage, and analyze large datasets stored in the Hadoop Distributed File System (HDFS) using a SQL-like language called HiveQL. Hive in Hadoop is a bridge between SQL and MapReduce \u2014 it allows users to run SQL-style queries on large datasets in Hadoop without writing Java code. Instead of writing complex MapReduce programs in Java, Hive automatically translates HiveQL queries into MapReduce, Tez, or Spark jobs , making it easier for data analysts and developers to work with big data. Key Points: \uf0b7 Hive is a data warehousing and querying tool in the Hadoop ecosystem. \uf0b7 It provides SQL-like queries (HiveQL) for ETL, reporting, and analysis.",
+    "word_count": 188
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p2_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 2,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 2 \uf0b7 Supports structured, semi-structured, and unstructured data stored in HDFS. \uf0b7 Schema on Read \u2192 The schema is applied when data is read, not when stored. \uf0b7 Best suited for batch processing and analytics, not real-time transactions. ----------------------------------------------------------------------------------------------------------- Hive Query Language (HiveQL) HiveQL supports DDL, DML, and Queries. HiveQL is a powerful SQL-like language for querying and analyzing large datasets in Hadoop. It supports DDL, DML, DQL, TCL, along with joins, subqueries, views, partitioning, bucketing, UDFs , but it is optimized for batch OLAP workloads , not OLTP. Example: CREATE TABLE employees ( id INT, name STRING, salary FLOAT, dept STRING ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE; LOAD DATA LOCAL INPATH '/home/data/employees.csv' INTO TABLE employees; SELECT dept, AVG(salary) FROM employees GROUP BY dept; Execution Flow of Hive Query 1. User submits HiveQL query 2. Driver parses & validates query 3. Compiler converts it into execution plan 4. Optimizer optimizes plan 5. Execution Engine runs query (MapReduce/Tez/Spark) 6. Results returned to user",
+    "word_count": 178
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p3_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 3,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 3 Hive Storage Formats - TextFile (default) - SequenceFile (binary key-value) - ORC (Optimized Row Columnar) - Parquet (columnar storage) - Avro (row-based, schema evolution) Advantages of Hive - SQL-like interface - Handles huge datasets - Extensible with UDFs, SerDes - Schema on read - Supports MapReduce, Tez, Spark Limitations of Hive - Not suitable for OLTP - High latency (batch oriented) - Limited updates/deletes - Dependent on Hadoop ecosystem _________________________________________________________________________________________________________ Why Hive? - Writing MapReduce programs is complex (Java-based, low-level). - Hive allows non-programmers and analysts to query Hadoop data using HiveQL (SQL-like language). - Automatically translates HiveQL queries \u2192 MapReduce jobs / Tez / Spark jobs. Use Cases: - Log analysis - Data summarization - Business intelligence reports - ETL (Extract, Transform, Load) operations ________________________________________________________________________",
+    "word_count": 138
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p4_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 4,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 4 Hive Architecture Hive\u2019s architecture has several layers: a) User Interface \u2013 CLI, Web UI, JDBC/ODBC b) Driver \u2013 Manages query execution (parsing, optimization) c) Compiler \u2013 Converts HiveQL \u2192 Execution Plan d) Metastore \u2013 Stores metadata about databases, tables, partitions e) Execution Engine \u2013 Executes query jobs f) HDFS \u2013 Stores the actual data Hive Components - Metastore \u2013 Metadata management - HiveQL Processor \u2013 SQL parser and compiler - Execution Engine \u2013 Converts HiveQL into jobs - Drivers \u2013 Manages sessions and interactions - UDFs \u2013 Extend Hive with custom logic Hive Data Units 1. Database \u2013 Collection of tables. 2. Table \u2013 Structured data stored in HDFS. - Managed Table: Hive controls data, dropped when table is deleted. - External Table: Data remains even if table is dropped. 3. Partition \u2013 Divides table data (e.g., by year/month). 4. Buckets \u2013 Further division of partitions ________________________________________________________________________ Hive Data Types Hive data types are divided into Primitive types (numbers, strings, dates, boolean, etc.) and Complex types (Array, Map, Struct, Union) to handle both structured and semi-structured data efficiently.",
+    "word_count": 190
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p5_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 5,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 5 Hive supports a variety of data types to define the schema of tables. They are broadly divided into Primitive Types and Complex Types. Primitive: INT, STRING, FLOAT, DOUBLE, BOOLEAN, TINYINT, SMALLINT, BIGINT Complex: ARRAY, MAP, STRUCT, UNIONTYPE 1. Primitive Data Types These are the basic, atomic data types. Type Description Example TINYINT 1-byte signed integer (-128 to 127) 10 SMALLINT 2-byte signed integer (-32,768 to 32,767) 200 INT 4-byte signed integer (-2^31 to 2^31-1) 10000 BIGINT 8-byte signed integer 9223372036854775807 BOOLEAN Represents TRUE or FALSE TRUE FLOAT 4-byte single precision floating-point number 23.45 DOUBLE 8-byte double precision floating-point number 3456.789 DECIMAL Fixed point number with user-defined precision and scale DECIMAL(10,2) \u2192 12345.67 STRING Sequence of characters, variable length \"Hello Hive\" VARCHAR(n) String with a maximum length n \"Data\" CHAR(n) Fixed length string of size n, padded with spaces \"ABC \" BINARY Sequence of bytes (used for raw data) 010101 TIMESTAMP Date and time (with nanosecond precision) 2025-09-20 09:15:30.123456789 DATE Stores only date (YYYY-MM-DD) 2025-09-20",
+    "word_count": 176
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p6_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 6,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 6 2. Complex Data Types Hive supports nested and collection data types. Type Description Example ARRAY Ordered collection of elements of the same type ARRAY(\"red\",\"blue\",\"green\") MAP Collection of key-value pairs MAP(\"name\":\"John\",\"age\":30) STRUCT Group of related attributes (like a record) STRUCT(\"John\", 30, \"HR\") UNIONTYPE Holds values of different types (only one at a time) UNIONTYPE(INT, STRING) _________________________________________________________________________________________________________ Hive Operators Hive provides various categories of operators that can be used in queries Relational operators \u2192 Compare values Arithmetic operators \u2192 Perform calculations Logical operators \u2192 Combine conditions Complex type operators \u2192 Work with ARRAY, MAP, STRUCT String operators \u2192 Handle text concatenation 1. Relational Operators Used for comparing values. Operator Description Example = Equal to salary = 50000 != or <> Not equal to dept != 'HR' < Less than age < 30",
+    "word_count": 142
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p7_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 7,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 7 Operator Description Example <= Less than or equal to age <= 25 > Greater than salary > 60000 >= Greater than or equal to salary >= 45000 LIKE Pattern matching using wildcards (%, _) name LIKE 'A%' RLIKE or REGEXP Matches regular expressions name RLIKE '^J.*' IS NULL Checks for NULL values address IS NULL IS NOT NULL Checks non-NULL values phone IS NOT NULL IN Matches any value in a list dept IN ('HR','IT','Sales') BETWEEN ... AND ... Value between two ranges age BETWEEN 25 AND 35 2. Arithmetic Operators Used for mathematical calculations. Operator Description Example + Addition salary + 5000 - Subtraction salary - 2000 * Multiplication salary * 2 / Division salary / 12 % Modulus (remainder) marks % 2 3. Logical Operators Used for combining conditions.",
+    "word_count": 143
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p8_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 8,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 8 Operator Description Example AND Returns TRUE if both conditions are true age > 25 AND dept = 'IT' OR Returns TRUE if any condition is true dept = 'HR' OR dept = 'Finance' NOT Negates a condition NOT (salary > 50000) 4. Complex Type Operators Used for accessing elements in ARRAY, MAP, STRUCT. Operator Description Example array[index] Access element from ARRAY (0-based index) skills[0] \u2192 first skill map[key] Access value from MAP using key properties['city'] struct.field Access field from STRUCT address.city 5.String Operators Operator Description Example ` ` LIKE Pattern matching with % (any chars) or _ (single char) name LIKE 'A%' RLIKE / REGEXP Match using regular expressions name RLIKE '^J.*' TRIM() Remove leading/trailing spaces TRIM(' Hive ') \u2192 Hive UPPER() Convert to uppercase UPPER('hive') \u2192 HIVE LOWER() Convert to lowercase LOWER('HIVE') \u2192 hive CONCAT() Concatenate strings CONCAT('Hive','QL') \u2192 HiveQL SUBSTR() / SUBSTRING() Extract substring SUBSTR('Hadoop',2,3) \u2192 ado REVERSE() Reverse string REVERSE('Hive') \u2192 eviH LENGTH() Length of string LENGTH('Hive') \u2192 4",
+    "word_count": 174
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p9_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 9,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 9 _____________________________________________________________ Hive Functions Hive provides built-in functions to process data. a) Aggregate Functions Operate on multiple rows and return a single value. \uf0b7 COUNT(expr) \u2192 Count of rows \uf0b7 SUM(expr) \u2192 Sum of values \uf0b7 AVG(expr) \u2192 Average value \uf0b7 MIN(expr) \u2192 Minimum value \uf0b7 MAX(expr) \u2192 Maximum value Example: SELECT dept, AVG(salary), MAX(salary), COUNT(*) FROM employees GROUP BY dept; b) Mathematical Functions \uf0b7 ROUND(123.45) \u2192 123 \uf0b7 FLOOR(123.45) \u2192 123 \uf0b7 CEIL(123.45) \u2192 124 \uf0b7 ABS(-10) \u2192 10 \uf0b7 SQRT(25) \u2192 5 \uf0b7 RAND() \u2192 Random number c) String Functions \uf0b7 LENGTH('Hive') \u2192 4 \uf0b7 LOWER('HIVE') \u2192 hive \uf0b7 UPPER('hive') \u2192 HIVE \uf0b7 CONCAT('Hive','QL') \u2192 HiveQL \uf0b7 SUBSTR('Hadoop', 2, 3) \u2192 ado \uf0b7 TRIM(' Hive ') \u2192 Hive \uf0b7 REVERSE('Hive') \u2192 eviH",
+    "word_count": 135
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p10_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 10,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 10 d) Date Functions \uf0b7 CURRENT_DATE \u2192 2025-09-20 \uf0b7 CURRENT_TIMESTAMP \u2192 2025-09-20 09:30:45 \uf0b7 YEAR('2025-09-20') \u2192 2025 \uf0b7 MONTH('2025-09-20') \u2192 9 \uf0b7 DAY('2025-09-20') \u2192 20 \uf0b7 DATEDIFF('2025-09-20','2025-09-10') \u2192 10 e) Conditional Functions \uf0b7 IF(condition, value_if_true, value_if_false) \u2192 IF(salary > 50000, 'High', 'Low') \uf0b7 CASE ... WHEN ... THEN ... ELSE ... END \uf0b7 SELECT name, \uf0b7 CASE \uf0b7 WHEN salary > 60000 THEN 'High' \uf0b7 WHEN salary BETWEEN 40000 AND 60000 THEN 'Medium' \uf0b7 ELSE 'Low' \uf0b7 END AS salary_band \uf0b7 FROM employees; f) Collection Functions (for ARRAY, MAP) \uf0b7 SIZE(array_or_map) \u2192 size of collection \uf0b7 MAP_KEYS(map) \u2192 list of keys \uf0b7 MAP_VALUES(map) \u2192 list of values \uf0b7 ARRAY_CONTAINS(array, value) \u2192 check if array contains element g) User-Defined Functions (UDFs) \uf0b7 Hive allows creating custom functions in Java/Python. \uf0b7 Types of UDFs: o UDF (Scalar function) \u2013 returns single value per row o UDAF (Aggregate function) \u2013 returns single value for group of rows o UDTF (Table-generating function) \u2013 returns multiple rows Example: Using built-in UDTF explode() SELECT id, skill",
+    "word_count": 181
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p11_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 11,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 11 FROM employee LATERAL VIEW explode(skills) t AS skill; \uf0b7 Operators \u2192 Arithmetic, Relational, Logical, String, Complex-type operators \uf0b7 Functions \u2192 Aggregate, Math, String, Date, Conditional, Collection + Custom UDFs Together, operators and functions make HiveQL powerful for big data querying and analytics. _____________________________________________________________ Hive Tables and Related Concepts \u2013 Detailed Explanation 1. Hive Tables Hive tables are the main structures where data is stored in HDFS. Tables in Hive can be of two main types: a) Managed Tables (Internal Tables) \uf0b7 Hive manages both data and metadata. \uf0b7 Data is stored in a default Hive warehouse directory (usually /user/hive/warehouse). \uf0b7 Dropping the table deletes both metadata and actual data. Example: CREATE TABLE employees ( id INT, name STRING, salary FLOAT, dept STRING ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE; -- Load data LOAD DATA LOCAL INPATH '/home/data/employees.csv' INTO TABLE employees; b) External Tables \uf0b7 Hive manages metadata only; data remains in original HDFS location.",
+    "word_count": 170
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p12_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 12,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 12 \uf0b7 Dropping the table deletes only metadata, data remains intact. Example: CREATE EXTERNAL TABLE employee_ext ( id INT, name STRING, salary FLOAT, dept STRING ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/user/data/employees'; 2. Partitions and Buckets a) Partitions \uf0b7 Tables can be partitioned by one or more columns to divide data into sub- directories for faster queries. \uf0b7 Example: Partition by year and month. CREATE TABLE sales ( id INT, amount FLOAT ) PARTITIONED BY (year INT, month INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; \uf0b7 Static Partitioning: You specify the partition values during insert. INSERT INTO TABLE sales PARTITION(year=2025, month=9) SELECT id, amount FROM temp_sales; \uf0b7 Dynamic Partitioning: Hive automatically assigns partition values from data. SET hive.exec.dynamic.partition=true; SET hive.exec.dynamic.partition.mode=nonstrict; INSERT INTO TABLE sales PARTITION(year, month) SELECT id, amount, year, month FROM temp_sales; b) Buckets (Clustering) \uf0b7 Further divides table/partition data into fixed number of files (buckets). \uf0b7 Improves query performance for joins and sampling. CREATE TABLE student (",
+    "word_count": 174
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p13_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 13,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 13 id INT, name STRING ) CLUSTERED BY (id) INTO 4 BUCKETS ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 3. Storage Formats Hive supports multiple storage formats: Format Description TEXTFILE Default, simple text SEQUENCEFILE Binary key-value format ORC (Optimized Row Columnar) Columnar format, fast read, supports compression PARQUET Columnar storage for analytics AVRO Row-based, schema evolution supported RCFILE Hybrid row-columnar format 4. Importing Data \uf0b7 LOAD DATA \u2013 loads file from local or HDFS into table LOAD DATA LOCAL INPATH '/home/data/employees.csv' INTO TABLE employees; LOAD DATA INPATH '/user/hdfs/employees.csv' INTO TABLE employees; \uf0b7 INSERT INTO SELECT \u2013 load data from another table/query INSERT INTO TABLE high_salary SELECT * FROM employees WHERE salary > 50000; 5. Altering Tables Add columns, change table properties, rename table, add partitions. ALTER TABLE employees ADD COLUMNS (age INT); ALTER TABLE employees RENAME TO employees_new; ALTER TABLE sales ADD PARTITION(year=2025, month=9);",
+    "word_count": 155
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p14_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 14,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 14 6. Dropping Tables \uf0b7 Managed table: Deletes metadata + data \uf0b7 External table: Deletes metadata only DROP TABLE employees; DROP TABLE employee_ext; 7. Querying Data Select, Filter, Aggregate, Sort -- Select and filter SELECT name, salary FROM employees WHERE dept='IT'; -- Aggregation SELECT dept, AVG(salary) AS avg_salary, COUNT(*) AS emp_count FROM employees GROUP BY dept; -- Sorting SELECT * FROM employees ORDER BY salary DESC; 8. MapReduce Scripts Hive can execute custom MapReduce scripts using TRANSFORM. SELECT TRANSFORM(id, name, salary) USING 'python process.py' AS (id INT, name STRING, salary FLOAT) FROM employees; 9. Joins Hive supports INNER, LEFT, RIGHT, FULL OUTER, CROSS JOIN SELECT e.name, d.dept_name FROM employees e JOIN departments d ON e.dept = d.id; 10. Subqueries Supported in SELECT, FROM, WHERE clauses SELECT name, salary",
+    "word_count": 139
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p15_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 15,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 15 FROM employees WHERE salary > (SELECT AVG(salary) FROM employees); 11. Views Logical representation of queries CREATE VIEW high_salary AS SELECT name, salary FROM employees WHERE salary > 50000; -- Query view SELECT * FROM high_salary; 12. User-Defined Functions (UDFs) Extend Hive with custom functions (Java/Python). ADD JAR my_udf.jar; CREATE TEMPORARY FUNCTION toUpper AS 'com.example.MyUpperCase'; SELECT toUpper(name) FROM employees; Summary Table Concept Key Points Managed Table Hive manages metadata + data, drop deletes data External Table Hive manages metadata only, drop keeps data Partitioning Divide table into directories, static or dynamic Bucketing Further divides table/partition into fixed files Storage Formats TextFile, ORC, Parquet, Avro, SequenceFile Importing Data LOAD DATA, INSERT INTO SELECT Alter Table Add columns, rename, add partitions Querying SELECT, FILTER, AGGREGATE, SORT MapReduce Scripts Use TRANSFORM with custom scripts Joins INNER, LEFT, RIGHT, FULL OUTER, CROSS Subqueries Nested queries in WHERE, FROM, SELECT",
+    "word_count": 156
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p16_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 16,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 16 Concept Key Points Views Logical tables based on queries UDFs Custom functions in Java/Python This covers Hive Tables in Hadoop completely, including all features, storage, query options, and extensions. ________________________________________________________________________ Sqoop: Sqoop Connectors, import, generated code, working with Imported Data, Exports Sqoop Apache Sqoop is a tool designed to transfer data between Hadoop and relational databases (RDBMS). \uf0b7 The name Sqoop comes from \u201cSQL to Hadoop\u201d. \uf0b7 It allows importing structured data from RDBMS into HDFS or Hive/HBase, and exporting Hadoop data back into RDBMS. \uf0b7 It simplifies ETL (Extract, Transform, Load) tasks for Big Data environments. Key Features: \uf0b7 Efficiently transfers large amounts of data. \uf0b7 Supports incremental imports. \uf0b7 Generates Java MapReduce code automatically. \uf0b7 Can work with Hive, HDFS, and HBase.",
+    "word_count": 136
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p17_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 17,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 17 2. Sqoop Connectors Sqoop uses connectors to communicate with different data sources. Types of Connectors: 1. JDBC Connector \u2013 Connects to any relational database that supports JDBC (MySQL, Oracle, PostgreSQL). 2. HDFS Connector \u2013 Imports/exports data to/from HDFS. 3. Hive Connector \u2013 Imports data directly into Hive tables. 4. HBase Connector \u2013 Imports data into HBase tables. 5. Custom Connectors \u2013 Developed for specific databases or sources. Example: Connecting to MySQL via JDBC sqoop list-databases \\ --connect jdbc:mysql://localhost:3306/ \\ --username root --password password 3. Sqoop Import a) Basic Import Imports table data from RDBMS to HDFS. sqoop import \\ --connect jdbc:mysql://localhost:3306/company \\ --username root --password password \\ --table employees \\ --target-dir /user/hadoop/employees \uf0b7 --table \u2192 Database table to import \uf0b7 --target-dir \u2192 HDFS destination \uf0b7 Sqoop generates MapReduce jobs for parallel data transfer. b) Import into Hive Import directly into Hive table: sqoop import \\ --connect jdbc:mysql://localhost:3306/company \\ --username root --password password \\ --table employees \\ --hive-import \\ --create-hive-table \\ --hive-table company.employees",
+    "word_count": 174
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p18_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 18,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 18 c) Incremental Import Only new/modified records can be imported: sqoop import \\ --connect jdbc:mysql://localhost:3306/company \\ --username root --password password \\ --table employees \\ --incremental append \\ --check-column id \\ --last-value 100 \uf0b7 append \u2192 Import rows with id > last imported value \uf0b7 last-value \u2192 Last imported primary key value 4. Generated Code \uf0b7 When you run Sqoop import/export, it generates Java MapReduce code automatically. \uf0b7 Generated code handles: o Database connection o Data extraction/insertion o Parallel execution \uf0b7 The user usually does not need to modify this code, unless custom transformations are required. Location: By default, Sqoop generates code in ~/sqoop-import or temporary directories. 5. Working with Imported Data Once imported into HDFS: o Data can be queried using Hive o Data can be processed using Pig or Spark o Data files can be in Text, Avro, Parquet formats Example: Access HDFS imported file: hdfs dfs -ls /user/hadoop/employees hdfs dfs -cat /user/hadoop/employees/part-m-00000",
+    "word_count": 165
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p19_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 19,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 19 Hive query on imported data: CREATE EXTERNAL TABLE employees_hive ( id INT, name STRING, salary FLOAT, dept STRING ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/hadoop/employees'; SELECT * FROM employees_hive WHERE salary > 50000; 6. Sqoop Export Transfers data from Hadoop/HDFS back to RDBMS. a) Basic Export sqoop export \\ --connect jdbc:mysql://localhost:3306/company \\ --username root --password password \\ --table employees_backup \\ --export-dir /user/hadoop/employees \\ --input-fields-terminated-by ',' \uf0b7 --export-dir \u2192 HDFS directory containing data \uf0b7 --table \u2192 Target RDBMS table b) Key Points \uf0b7 Exported data must match table schema in the database. \uf0b7 Handles parallel export using multiple mappers. \uf0b7 Can be incremental or full export. 7. Summary Table Feature Description Purpose Transfer data between RDBMS and Hadoop Connectors JDBC, Hive, HBase, Custom Import Load RDBMS table into HDFS/Hive/HBase Generated Code Java MapReduce code automatically created",
+    "word_count": 153
+  },
+  {
+    "chunk_id": "BIG_DATA_UNIT-4.pdf_p20_c0",
+    "source": "BIG_DATA_UNIT-4.pdf",
+    "page": 20,
+    "text": "Prepared by K.Chandram Assistant Professor Dept of AI Anurag University Page 20 Feature Description Working with Imported Data Process in Hive, Pig, Spark; stored in Text/Parquet/Avro Export Transfer data from HDFS back to RDBMS Incremental Import Only new/modified rows imported using check-column & last-value Sqoop is the bridge between Hadoop and relational databases , allowing efficient data import/export, generating parallel MapReduce jobs automatically , and supporting Hive/HBase integration.",
+    "word_count": 68
   }
 ]
